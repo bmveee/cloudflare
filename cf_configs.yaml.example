@@ -1,0 +1,22 @@
+# Cloudflare credentials
+auth_tokens:
+  - token: ${CLOUDFLARE_PERSONAL_TOKEN}
+    desc: "DNS zones for account ${CLOUDFLARE_PERSONAL_ACCNT}"
+    domains:
+      - zone_name: "zone1.com"
+        records:
+          - name: "host1"
+            type: "A"
+            proxied: true
+            ttl: 300
+          - name: "host2"
+            type: "A"
+            proxied: true
+            ttl: 300
+
+      - zone_name: "zone2.net"
+        records:
+          - name: "host3"  # @ For root domain
+            type: "A"
+            proxied: true
+            ttl: 300
