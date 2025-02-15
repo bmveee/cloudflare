@@ -6,6 +6,7 @@ import re
 import requests
 import yaml
 
+
 def setup_logging(debug_mode: bool = False) -> Logger:
     """Setup and return a configured logger instance"""
     logger = logging.getLogger("cloudflare_updater")
@@ -20,8 +21,8 @@ def setup_logging(debug_mode: bool = False) -> Logger:
 
     # Create formatter
     formatter = logging.Formatter(
-        "%(asctime)s | %(filename)s:%(lineno)d | %(funcName)s() | %(levelname)s | %(message)s",
-        datefmt="%Y%m%d-%H:%M:%S.%f",
+        "%(asctime)s.%(msecs)03d | %(filename)s:%(lineno)d | %(funcName)s() | %(levelname)s | %(message)s",
+        datefmt="%Y%m%d-%H:%M:%S",
     )
 
     # Add formatter to handler
@@ -32,16 +33,18 @@ def setup_logging(debug_mode: bool = False) -> Logger:
 
     return logger
 
-if __name__ == '__main__':
-  pass
 
-def load_yaml_with_defaults(yaml_path, logger: Logger, log_level: int =0):
+if __name__ == "__main__":
+    pass
+
+
+def load_yaml_with_defaults(yaml_path, logger: Logger, log_level: int = 0):
     pattern = re.compile(r"\${([A-Za-z0-9_-]+)(?::([^}]+))?}")
 
     def env_constructor(loader, node):
         value = loader.construct_scalar(node)
         if log_level > 0:
-          logger.debug(f"Processing value: {value}")
+            logger.debug(f"Processing value: {value}")
 
         for match in pattern.finditer(value):
             env_var, default = match.groups()
@@ -52,8 +55,8 @@ def load_yaml_with_defaults(yaml_path, logger: Logger, log_level: int =0):
                 old_value = value
                 value = value.replace(match.group(0), env_value)
                 if log_level > 0:
-                  logger.debug(f"Replacing {match.group(0)} with {env_value}")
-                  logger.debug(f"Value changed from '{old_value}' to '{value}'")
+                    logger.debug(f"Replacing {match.group(0)} with {env_value}")
+                    logger.debug(f"Value changed from '{old_value}' to '{value}'")
         return value
 
     # Add constructor for all scalars
